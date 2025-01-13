@@ -6,6 +6,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -13,10 +14,10 @@ import javafx.stage.FileChooser;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.Stack;
 
 public class ShapeDrawingAppController {
-
     @FXML private Canvas canvas;
     @FXML private ColorPicker colorPicker;
     @FXML private Slider lineWidthSlider;
@@ -26,6 +27,9 @@ public class ShapeDrawingAppController {
     @FXML private Button saveButton;
     @FXML private Button undoButton;
     @FXML private Button redoButton;
+    @FXML private Button resizeButton;
+    @FXML private ToggleButton themeToggle;
+    @FXML private Label statusBar;
 
     private GraphicsContext gc;
     private Color currentColor = Color.BLACK;
@@ -37,15 +41,11 @@ public class ShapeDrawingAppController {
     private Stack<Image> redoStack = new Stack<>();
 
     @FXML
-    public void initialize() {
+    private void initialize() {
         gc = canvas.getGraphicsContext2D();
         initializeCanvas();
 
-        // Event Listeners
-        canvas.setOnMousePressed(this::onMousePressed);
-        canvas.setOnMouseDragged(this::onMouseDragged);
-        canvas.setOnMouseReleased(this::onMouseReleased);
-
+        // Bind controls to handlers
         colorPicker.setOnAction(e -> {
             currentColor = colorPicker.getValue();
             gc.setStroke(currentColor);
@@ -56,23 +56,23 @@ public class ShapeDrawingAppController {
             gc.setLineWidth(currentLineWidth);
         });
 
-        shapeSelector.getItems().addAll("Freehand", "Rectangle", "Circle", "Line");
-        shapeSelector.setValue("Freehand");
-        shapeSelector.setOnAction(e -> {
-            drawingMode = shapeSelector.getValue();
-            isEraser = false; // Disable eraser when switching to shapes
+        shapeSelector.valueProperty().addListener((obs, oldVal, newVal) -> {
+            drawingMode = newVal;
+            isEraser = false;
             eraserButton.setSelected(false);
         });
 
         eraserButton.setOnAction(e -> isEraser = eraserButton.isSelected());
-        clearButton.setOnAction(e -> {
-            saveState();
-            initializeCanvas();
-        });
-
+        clearButton.setOnAction(e -> clearCanvas());
         saveButton.setOnAction(e -> saveCanvas());
         undoButton.setOnAction(e -> undo());
         redoButton.setOnAction(e -> redo());
+        resizeButton.setOnAction(e -> resizeCanvas());
+        themeToggle.setOnAction(e -> toggleTheme());
+
+        canvas.setOnMousePressed(this::onMousePressed);
+        canvas.setOnMouseDragged(this::onMouseDragged);
+        canvas.setOnMouseReleased(this::onMouseReleased);
     }
 
     private void onMousePressed(MouseEvent e) {
@@ -122,7 +122,6 @@ public class ShapeDrawingAppController {
                 break;
 
             default:
-                // No action needed for freehand or other modes
                 break;
         }
     }
@@ -140,7 +139,7 @@ public class ShapeDrawingAppController {
         redoStack.clear();
     }
 
-    private void undo() {
+    void undo() {
         if (!undoStack.isEmpty()) {
             Image previousState = undoStack.pop();
             redoStack.push(canvas.snapshot(null, null));
@@ -148,7 +147,7 @@ public class ShapeDrawingAppController {
         }
     }
 
-    private void redo() {
+    void redo() {
         if (!redoStack.isEmpty()) {
             Image nextState = redoStack.pop();
             undoStack.push(canvas.snapshot(null, null));
@@ -156,10 +155,13 @@ public class ShapeDrawingAppController {
         }
     }
 
-    private void saveCanvas() {
+    void saveCanvas() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG Files", "*.png"));
-        File file = fileChooser.showSaveDialog(null);
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("PNG Files", "*.png"),
+                new FileChooser.ExtensionFilter("JPEG Files", "*.jpg")
+        );
+        File file = fileChooser.showSaveDialog(canvas.getScene().getWindow());
         if (file != null) {
             try {
                 ImageIO.write(SwingFXUtils.fromFXImage(canvas.snapshot(null, null), null), "png", file);
@@ -168,4 +170,31 @@ public class ShapeDrawingAppController {
             }
         }
     }
+
+    private void clearCanvas() {
+        saveState();
+        initializeCanvas();
+    }
+
+    private void resizeCanvas() {
+        TextInputDialog dialog = new TextInputDialog(String.valueOf(canvas.getWidth()));
+        dialog.setTitle("Resize Canvas");
+        dialog.setHeaderText("Enter new canvas dimensions");
+        dialog.setContentText("Width:");
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(width -> {
+            double newWidth = Double.parseDouble(width);
+            canvas.setWidth(newWidth);
+            initializeCanvas();
+        });
+    }
+
+    private void toggleTheme() {
+        if (themeToggle.isSelected()) {
+            canvas.getScene().getRoot().setStyle("-fx-background-color: #333; -fx-text-fill: white;");
+        } else {
+            canvas.getScene().getRoot().setStyle("-fx-background-color: white; -fx-text-fill: black;");
+        }
+    }
 }
+
