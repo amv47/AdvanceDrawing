@@ -3,7 +3,10 @@ package com.example.javafxtest;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
+
+
 
 public class ShapeDrawingApp extends Application {
     @Override
@@ -18,6 +21,9 @@ public class ShapeDrawingApp extends Application {
             if (e.isControlDown() && e.getCode().toString().equals("Y")) controller.redo();
             if (e.isControlDown() && e.getCode().toString().equals("S")) controller.saveCanvas();
         });
+
+        Image icon = new Image("81ILaTyMxWL._AC_UF1000,1000_QL80_.jpg");
+        stage.getIcons().add(icon);
 
         stage.setTitle("Shape Drawing App (FXML Version)");
         stage.setScene(scene);
