@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.javafxtest.ShapeDrawingAppController">
+   <!-- Top Toolbar -->
+   <top>
+      <HBox spacing="10" style="-fx-padding: 10; -fx-background-color: #f4f4f4;">
+         <children>
+            <Label text="Color:" />
+            <ColorPicker fx:id="colorPicker" />
+            <Label text="Line Width:" />
+            <Slider fx:id="lineWidthSlider" min="1" max="50" value="3" showTickLabels="true" showTickMarks="true" majorTickUnit="10" />
+            <Label text="Drawing Mode:" />
+            <ComboBox fx:id="shapeSelector" />
+            <ToggleButton fx:id="eraserButton" text="Eraser" />
+            <Button fx:id="clearButton" text="Clear" />
+            <Button fx:id="saveButton" text="Save" />
+            <Button fx:id="undoButton" text="Undo" />
+            <Button fx:id="redoButton" text="Redo" />
+         </children>
+      </HBox>
+   </top>
+
+   <!-- Center Canvas -->
+   <center>
+      <Canvas fx:id="canvas" width="1000" height="700" />
+   </center>
+</BorderPane>
