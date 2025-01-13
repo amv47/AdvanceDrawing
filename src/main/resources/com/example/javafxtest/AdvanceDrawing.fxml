@@ -1,31 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.javafxtest.ShapeDrawingAppController">
-   <!-- Top Toolbar -->
-   <top>
-      <HBox spacing="10" style="-fx-padding: 10; -fx-background-color: #f4f4f4;">
-         <children>
-            <Label text="Color:" />
-            <ColorPicker fx:id="colorPicker" />
-            <Label text="Line Width:" />
-            <Slider fx:id="lineWidthSlider" min="1" max="50" value="3" showTickLabels="true" showTickMarks="true" majorTickUnit="10" />
-            <Label text="Drawing Mode:" />
-            <ComboBox fx:id="shapeSelector" />
-            <ToggleButton fx:id="eraserButton" text="Eraser" />
-            <Button fx:id="clearButton" text="Clear" />
-            <Button fx:id="saveButton" text="Save" />
-            <Button fx:id="undoButton" text="Undo" />
-            <Button fx:id="redoButton" text="Redo" />
-         </children>
-      </HBox>
-   </top>
+    <!-- Top Toolbar -->
+    <top>
+        <HBox spacing="10" style="-fx-padding: 10; -fx-background-color: #f4f4f4;">
+            <children>
+                <Label text="Color:" />
+                <ColorPicker fx:id="colorPicker">
+                    <tooltip>
+                        <Tooltip text="Choose a drawing color" />
+                    </tooltip>
+                </ColorPicker>
+                <Label text="Line Width:" />
+                <Slider fx:id="lineWidthSlider" min="1" max="50" value="3" showTickLabels="true" showTickMarks="true" majorTickUnit="10">
+                    <tooltip>
+                        <Tooltip text="Set line or eraser width" />
+                    </tooltip>
+                </Slider>
+                <Label text="Drawing Mode:" />
+                <ComboBox fx:id="shapeSelector">
+                    <tooltip>
+                        <Tooltip text="Choose a drawing mode" />
+                    </tooltip>
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Freehand" />
+                            <String fx:value="Rectangle" />
+                            <String fx:value="Circle" />
+                            <String fx:value="Line" />
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+                <ToggleButton fx:id="eraserButton" text="Eraser">
+                    <tooltip>
+                        <Tooltip text="Toggle eraser mode" />
+                    </tooltip>
+                </ToggleButton>
+                <Button fx:id="clearButton" text="Clear">
+                    <tooltip>
+                        <Tooltip text="Clear the canvas" />
+                    </tooltip>
+                </Button>
+                <Button fx:id="saveButton" text="Save">
+                    <tooltip>
+                        <Tooltip text="Save your drawing" />
+                    </tooltip>
+                </Button>
+                <Button fx:id="undoButton" text="Undo">
+                    <tooltip>
+                        <Tooltip text="Undo the last action (Ctrl+Z)" />
+                    </tooltip>
+                </Button>
+                <Button fx:id="redoButton" text="Redo">
+                    <tooltip>
+                        <Tooltip text="Redo the last undone action (Ctrl+Y)" />
+                    </tooltip>
+                </Button>
+                <Button fx:id="resizeButton" text="Resize Canvas">
+                    <tooltip>
+                        <Tooltip text="Resize the canvas" />
+                    </tooltip>
+                </Button>
+                <ToggleButton fx:id="themeToggle" text="Toggle Theme">
+                    <tooltip>
+                        <Tooltip text="Switch between light and dark mode" />
+                    </tooltip>
+                </ToggleButton>
+            </children>
+        </HBox>
+    </top>
 
-   <!-- Center Canvas -->
-   <center>
-      <Canvas fx:id="canvas" width="1000" height="700" />
-   </center>
+    <!-- Center Canvas -->
+    <center>
+        <Canvas fx:id="canvas" width="1000" height="700" />
+    </center>
+
+    <!-- Bottom Status Bar -->
+    <bottom>
+        <Label fx:id="statusBar" text="Ready" style="-fx-padding: 5; -fx-background-color: #ccc;" />
+    </bottom>
 </BorderPane>
