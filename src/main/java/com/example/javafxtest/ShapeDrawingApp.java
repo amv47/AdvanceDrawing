@@ -22,10 +22,10 @@ public class ShapeDrawingApp extends Application {
             if (e.isControlDown() && e.getCode().toString().equals("S")) controller.saveCanvas();
         });
 
-        Image icon = new Image("81ILaTyMxWL._AC_UF1000,1000_QL80_.jpg");
+        Image icon = new Image("Mainlogo.png");
         stage.getIcons().add(icon);
 
-        stage.setTitle("Shape Drawing App (FXML Version)");
+        stage.setTitle("CanvasAdvance");
         stage.setScene(scene);
         stage.show();
     }
