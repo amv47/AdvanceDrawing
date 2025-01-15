@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 
 public class ShapeDrawingApp extends Application {
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stages) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("AdvanceDrawing.fxml"));
         Scene scene = new Scene(loader.load(), 1000, 700);
 
@@ -23,11 +23,11 @@ public class ShapeDrawingApp extends Application {
         });
 
         Image icon = new Image("Mainlogo.png");
-        stage.getIcons().add(icon);
+        stages.getIcons().add(icon);
 
-        stage.setTitle("CanvasAdvance");
-        stage.setScene(scene);
-        stage.show();
+        stages.setTitle("CanvasAdvance");
+        stages.setScene(scene);
+        stages.show();
     }
 
     public static void main(String[] args) {
